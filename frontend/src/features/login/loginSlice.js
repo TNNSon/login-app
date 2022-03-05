@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchLogin } from './loginAPI';
 
 const initialState = {
-  username: '',
+  info: '',
   status: 'idle',
 };
 
@@ -16,7 +16,7 @@ export const loginAsync = createAsyncThunk(
   async ({username, password}) => {
     const response = await fetchLogin({username, password});
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return response;
   }
 );
 
@@ -49,7 +49,7 @@ export const loginSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.value += action.payload;
+        state.info = action.payload;
       });
   },
 });

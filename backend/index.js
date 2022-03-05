@@ -1,6 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const port = process.env.SERVER_PORT || 8080;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 var cors = require("cors");
 // Configure app to use bodyParser to parse json data
 const app = express();
@@ -41,9 +43,15 @@ app.post("/login", (req, res) => {
     .get(url, { headers: HEADERS })
     .then((response) => {
       const { data } = response;
+      const {password, ...userInfo} = data
+
+
+     
+      const token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '5m' });
+
       res.header("Access-Control-Allow-Origin", "*");
       res.status(200);
-      res.json(data);
+      res.json({...userInfo, token });
     })
     .catch((err) => {
       res.status(err.response ? err.response.status : 500);
