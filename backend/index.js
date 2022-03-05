@@ -6,8 +6,11 @@ var cors = require("cors");
 const app = express();
 // Add headers before the routes are defined
 app.use(cors());
+app.use(
+  express.urlencoded()
+)
+app.use(express.json())
 
-const server = require("http").createServer(app);
 require("dotenv").config();
 const LOGIN_API = "https://6164054db55edc00175c1cc9.mockapi.io/";
 
@@ -31,8 +34,8 @@ app.get("/", function (req, res) {
 });
 
 // Fetch address based on latlong
-app.get("/login", (req, res) => {
-  const { seachText } = req.params;
+app.post("/login", (req, res) => {
+  const {username, password} = req.body
   const url = `${LOGIN_API}v1/auth/1`;
   axios
     .get(url, { headers: HEADERS })
@@ -48,6 +51,7 @@ app.get("/login", (req, res) => {
     });
 });
 
+const server = require("http").createServer(app);
 
 // Start the server
 server.listen(port);
